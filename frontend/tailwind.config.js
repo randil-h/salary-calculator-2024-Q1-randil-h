@@ -6,7 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray: '#757575',
+        customGray: '#757575',
+        bgGray: '#FAFAFA',
+        primaryBlue: '#0052EA',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
@@ -15,4 +17,3 @@ module.exports = {
   },
   plugins: [],
 }
-
