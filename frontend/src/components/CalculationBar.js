@@ -1,43 +1,90 @@
-// CalculationBar.js
 import React, { useMemo } from 'react';
 
 const CalculationBar = ({ basicSalary, earnings, deductions, formatNumber }) => {
-  // Calculate gross earnings, gross deductions, employee EPF, APIT, and net salary
-  const grossEarnings = useMemo(() => {
-    return earnings.reduce((sum, earning) => sum + parseFloat(earning.amount.replace(/,/g, '')), parseFloat(basicSalary.replace(/,/g, '')));
-  }, [earnings, basicSalary]);
+  const basicSalaryNum = parseFloat(basicSalary.replace(/,/g, ''));
 
+  // Calculate total earnings
+  const totalEarnings = useMemo(() => {
+    return earnings.reduce((sum, earning) => sum + parseFloat(earning.amount.replace(/,/g, '')), basicSalaryNum);
+  }, [earnings, basicSalaryNum]);
+
+  // Calculate total earnings for EPF
+  const totalEarningsForEPF = useMemo(() => {
+    return basicSalaryNum + earnings.reduce((sum, earning) => {
+      return earning.epfEtf ? sum + parseFloat(earning.amount.replace(/,/g, '')) : sum;
+    }, 0);
+  }, [earnings, basicSalaryNum]);
+
+  // Calculate gross deductions
   const grossDeductions = useMemo(() => {
-    return deductions.reduce((sum, deduction) => sum + parseFloat(deduction.amount.replace(/,/g, '')), 0);
+    return deductions.reduce((sum, deduction) => {
+      const deductionAmount = parseFloat(deduction.amount.replace(/,/g, ''));
+      const epfEtfDeduction = deduction.epfEtf ? deductionAmount * 0.10 : 0;
+      return sum + deductionAmount + epfEtfDeduction;
+    }, 0);
   }, [deductions]);
 
+  // Calculate gross earnings
+  const grossEarnings = useMemo(() => {
+    return totalEarnings - grossDeductions;
+  }, [totalEarnings, grossDeductions]);
+
+  // Calculate gross salary for EPF
+  const grossSalaryForEPF = useMemo(() => {
+    return totalEarningsForEPF - grossDeductions;
+  }, [totalEarningsForEPF, grossDeductions]);
+
+  // Calculate employee EPF (8%)
   const employeeEPF = useMemo(() => {
-    return (grossEarnings * 0.08).toFixed(2);
-  }, [grossEarnings]);
+    return (grossSalaryForEPF * 0.08).toFixed(2);
+  }, [grossSalaryForEPF]);
 
-  const APIT = useMemo(() => {
-    // Replace this with your actual APIT calculation if applicable
-    return (grossEarnings * 0.05).toFixed(2); // Example calculation
-  }, [grossEarnings]);
-
-  const netSalary = useMemo(() => {
-    return (grossEarnings - grossDeductions - employeeEPF - APIT).toFixed(2);
-  }, [grossEarnings, grossDeductions, employeeEPF, APIT]);
-
+  // Calculate employer EPF (12%)
   const employerEPF = useMemo(() => {
-    return (grossEarnings * 0.12).toFixed(2);
-  }, [grossEarnings]);
+    return (grossSalaryForEPF * 0.12).toFixed(2);
+  }, [grossSalaryForEPF]);
 
+  // Calculate employer ETF (3%)
   const employerETF = useMemo(() => {
-    return (grossEarnings * 0.03).toFixed(2);
-  }, [grossEarnings]);
+    return (grossSalaryForEPF * 0.03).toFixed(2);
+  }, [grossSalaryForEPF]);
 
+  // Calculate APIT
+  const APIT = useMemo(() => {
+    const grossEarnings = parseFloat(grossSalaryForEPF);
+    let taxAmount = 0;
+
+    if (grossEarnings <= 100000) {
+      taxAmount = 0;
+    } else if (grossEarnings <= 141667) {
+      taxAmount = (grossEarnings * 0.06) - 6000;
+    } else if (grossEarnings <= 183333) {
+      taxAmount = (grossEarnings * 0.12) - 14500;
+    } else if (grossEarnings <= 225000) {
+      taxAmount = (grossEarnings * 0.18) - 25500;
+    } else if (grossEarnings <= 266667) {
+      taxAmount = (grossEarnings * 0.24) - 39000;
+    } else if (grossEarnings <= 308333) {
+      taxAmount = (grossEarnings * 0.30) - 55000;
+    } else {
+      taxAmount = (grossEarnings * 0.36) - 73500;
+    }
+
+    return taxAmount.toFixed(2);
+  }, [grossSalaryForEPF]);
+
+  // Calculate net salary
+  const netSalary = useMemo(() => {
+    return (grossEarnings - employeeEPF - APIT).toFixed(2);
+  }, [grossEarnings, employeeEPF, APIT]);
+
+  // Calculate cost to company (CTC)
   const CTC = useMemo(() => {
     return (grossEarnings + parseFloat(employerEPF) + parseFloat(employerETF)).toFixed(2);
   }, [grossEarnings, employerEPF, employerETF]);
 
   return (
-      <div className="w-1/4 mx-auto bg-white shadow-md rounded-lg p-6 border border-gray">
+      <div className="w-1/4 bg-white shadow-md rounded-lg p-6 border border-gray">
         <h2 className="text-xl font-bold mb-4">Your Salary</h2>
         <div className="pb-4 mb-4">
           <div className="flex justify-between">

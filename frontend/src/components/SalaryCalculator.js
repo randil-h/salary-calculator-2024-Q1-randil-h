@@ -14,7 +14,7 @@ const SalaryCalculator = () => {
 
     return (
         <div className="w-full bg-lightGray py-4 ">
-            <div className="mx-auto sm:px-6 lg:px-8">
+            <div className="sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row">
                     <DataInput
                         basicSalary={basicSalary}
