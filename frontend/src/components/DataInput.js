@@ -1,87 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import reseticon from '../assets/icons/reseticon.png';
 import plussign from '../assets/icons/plussign.png';
 import crosssign from '../assets/icons/crosssign.png';
 
-const DataInput = () => {
-    const formatNumber = (value) => {
-        if (value === '') return '0.00';
-        const number = parseFloat(value.replace(/,/g, ''));
-        return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    };
-
-    const [basicSalary, setBasicSalary] = useState(() => {
-        const savedValue = localStorage.getItem('basicSalary');
-        return savedValue !== null ? savedValue : '0.00';
-    });
-    const [earnings, setEarnings] = useState(() => {
-        const savedValue = localStorage.getItem('earnings');
-        return savedValue !== null ? JSON.parse(savedValue) : [{ title: '', amount: '0.00', epfEtf: false }];
-    });
-    const [deductions, setDeductions] = useState(() => {
-        const savedValue = localStorage.getItem('deductions');
-        return savedValue !== null ? JSON.parse(savedValue) : [{ title: '', amount: '0.00', epfEtf: false }];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('basicSalary', basicSalary);
-        localStorage.setItem('earnings', JSON.stringify(earnings));
-        localStorage.setItem('deductions', JSON.stringify(deductions));
-    }, [basicSalary, earnings, deductions]);
-
+const DataInput = ({
+                       basicSalary,
+                       setBasicSalary,
+                       earnings,
+                       setEarnings,
+                       deductions,
+                       setDeductions,
+                       formatNumber
+                   }) => {
     const handleEarningsChange = (index, field, value) => {
         const newEarnings = [...earnings];
         newEarnings[index][field] = field === 'amount' ? formatNumber(value) : value;
         setEarnings(newEarnings);
-        localStorage.setItem('earnings', JSON.stringify(newEarnings));
     };
 
     const handleDeductionsChange = (index, field, value) => {
         const newDeductions = [...deductions];
         newDeductions[index][field] = field === 'amount' ? formatNumber(value) : value;
         setDeductions(newDeductions);
-        localStorage.setItem('deductions', JSON.stringify(newDeductions));
     };
 
     const handleBasicSalaryChange = (value) => {
         const formattedValue = formatNumber(value);
         setBasicSalary(formattedValue);
-        localStorage.setItem('basicSalary', formattedValue);
     };
 
     const handleAddEarnings = () => {
         const newEarnings = [...earnings, { title: '', amount: '0.00', epfEtf: false }];
         setEarnings(newEarnings);
-        localStorage.setItem('earnings', JSON.stringify(newEarnings));
     };
 
     const handleAddDeductions = () => {
         const newDeductions = [...deductions, { title: '', amount: '0.00', epfEtf: false }];
         setDeductions(newDeductions);
-        localStorage.setItem('deductions', JSON.stringify(newDeductions));
     };
 
     const handleRemoveEarnings = (index) => {
         const newEarnings = [...earnings];
         newEarnings.splice(index, 1);
         setEarnings(newEarnings);
-        localStorage.setItem('earnings', JSON.stringify(newEarnings));
     };
 
     const handleRemoveDeductions = (index) => {
         const newDeductions = [...deductions];
         newDeductions.splice(index, 1);
         setDeductions(newDeductions);
-        localStorage.setItem('deductions', JSON.stringify(newDeductions));
     };
 
     const handleReset = () => {
         setBasicSalary('0.00');
         setEarnings([{ title: '', amount: '0.00', epfEtf: false }]);
         setDeductions([{ title: '', amount: '0.00', epfEtf: false }]);
-        localStorage.setItem('basicSalary', '0.00');
-        localStorage.setItem('earnings', JSON.stringify([{ title: '', amount: '0.00', epfEtf: false }]));
-        localStorage.setItem('deductions', JSON.stringify([{ title: '', amount: '0.00', epfEtf: false }]));
     };
 
     return (
