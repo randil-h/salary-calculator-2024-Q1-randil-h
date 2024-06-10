@@ -114,7 +114,7 @@ const DataInput = ({
                         </div>
                         <div className="w-1/3 ml-2">
                             <input
-                                type="text"
+                                type="Number"
                                 placeholder="Amount"
                                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-primaryBlue focus:ring focus:ring-primaryBlue focus:ring-opacity-50"
                                 value={earning.amount}
@@ -157,7 +157,7 @@ const DataInput = ({
                         </div>
                         <div className="w-1/3 ml-2">
                             <input
-                                type="text"
+                                type="Number"
                                 placeholder="Amount"
                                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-primaryBlue focus:ring focus:ring-primaryBlue focus:ring-opacity-50"
                                 value={deduction.amount}
