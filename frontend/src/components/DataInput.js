@@ -58,7 +58,7 @@ const DataInput = ({
     };
 
     return (
-        <div className="w-1/3 bg-white shadow-md rounded-lg p-6 mr-3">
+        <div className="ml-64 w-1/3 bg-bgGray shadow-md rounded-lg p-8 mr-3">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold mb-4">Calculate Your Salary</h2>
                 <div className="flex items-center" onClick={handleReset}>
