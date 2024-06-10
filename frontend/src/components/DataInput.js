@@ -12,45 +12,61 @@ const DataInput = ({
                        setDeductions,
                        formatNumber
                    }) => {
+    // Handle changes to earnings input fields
     const handleEarningsChange = (index, field, value) => {
         const newEarnings = [...earnings];
         newEarnings[index][field] = field === 'amount' ? formatNumber(value) : value;
         setEarnings(newEarnings);
     };
 
+    // Handle changes to deductions input fields, including the EPF/ETF checkbox
     const handleDeductionsChange = (index, field, value) => {
         const newDeductions = [...deductions];
-        newDeductions[index][field] = field === 'amount' ? formatNumber(value) : value;
+
+        if (field === 'epfEtf') {
+            newDeductions[index][field] = value;
+            const basicSalaryNum = parseFloat(basicSalary.replace(/,/g, ''));
+            newDeductions[index]['amount'] = value ? formatNumber((basicSalaryNum * 0.10).toFixed(2)) : '0.00';
+        } else {
+            newDeductions[index][field] = formatNumber(value);
+        }
+
         setDeductions(newDeductions);
     };
 
+    // Handle changes to the basic salary input field
     const handleBasicSalaryChange = (value) => {
         const formattedValue = formatNumber(value);
         setBasicSalary(formattedValue);
     };
 
+    // Add a new earnings input set
     const handleAddEarnings = () => {
         const newEarnings = [...earnings, { title: '', amount: '0.00', epfEtf: false }];
         setEarnings(newEarnings);
     };
 
+    // Add a new deductions input set
     const handleAddDeductions = () => {
         const newDeductions = [...deductions, { title: '', amount: '0.00', epfEtf: false }];
         setDeductions(newDeductions);
     };
 
+    // Remove an earnings input set
     const handleRemoveEarnings = (index) => {
         const newEarnings = [...earnings];
         newEarnings.splice(index, 1);
         setEarnings(newEarnings);
     };
 
+    // Remove a deductions input set
     const handleRemoveDeductions = (index) => {
         const newDeductions = [...deductions];
         newDeductions.splice(index, 1);
         setDeductions(newDeductions);
     };
 
+    // Reset all input fields to their default values
     const handleReset = () => {
         setBasicSalary('0.00');
         setEarnings([{ title: '', amount: '0.00', epfEtf: false }]);
