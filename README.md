@@ -1,4 +1,3 @@
-
 # Salary Calculator
 
 This mini react app was developed to calculate the take home pay and the cost to company when the basic pay, allowances and deductions are input. The calculator automatically calculates the relevant EPF/ETF values according to the selection and income tax applicable and deducts it.
