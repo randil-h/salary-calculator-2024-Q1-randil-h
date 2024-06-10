@@ -15,7 +15,7 @@ const DataInput = ({
     // Handle changes to earnings input fields
     const handleEarningsChange = (index, field, value) => {
         const newEarnings = [...earnings];
-        newEarnings[index][field] = field === 'amount' ? formatNumber(value) : value;
+        newEarnings[index][field] = field === 'amount' ? value : value;
         setEarnings(newEarnings);
     };
 
@@ -28,7 +28,7 @@ const DataInput = ({
             const basicSalaryNum = parseFloat(basicSalary.replace(/,/g, ''));
             newDeductions[index]['amount'] = value ? formatNumber((basicSalaryNum * 0.10).toFixed(2)) : '0.00';
         } else {
-            newDeductions[index][field] = formatNumber(value);
+            newDeductions[index][field] = value;
         }
 
         setDeductions(newDeductions);
@@ -71,6 +71,7 @@ const DataInput = ({
         setBasicSalary('0.00');
         setEarnings([{ title: '', amount: '0.00', epfEtf: false }]);
         setDeductions([{ title: '', amount: '0.00', epfEtf: false }]);
+        localStorage.clear();
     };
 
     return (
