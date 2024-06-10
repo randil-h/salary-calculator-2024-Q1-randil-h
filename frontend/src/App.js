@@ -1,14 +1,12 @@
 import './App.css';
-import CalculationBar from './components/CalculationBar';
-import DataInput from './components/DataInput';
+import SalaryCalculator from "./components/SalaryCalculator";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <DataInput />
-      <CalculationBar />
-    </div>
-  );
+    return (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <SalaryCalculator />
+        </div>
+    );
 }
 
 export default App;
