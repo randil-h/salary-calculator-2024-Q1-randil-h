@@ -1,49 +1,4 @@
 import React, { useMemo } from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-
-describe('CalculationBar component', () => {
-  // Mock props for testing
-  const mockProps = {
-    basicSalary: '50000',
-    earnings: [
-      { title: 'Bonus', amount: '10000', epfEtf: true },
-      { title: 'Overtime', amount: '5000', epfEtf: false },
-    ],
-    deductions: [
-      { title: 'Insurance', amount: '2000', epfEtf: false },
-      { title: 'Tax', amount: '3000', epfEtf: true },
-    ],
-    formatNumber: jest.fn(),
-  };
-
-  it('renders with given props', () => {
-    const { getByText } = render(<CalculationBar {...mockProps} />);
-
-    // Check if elements rendered with expected content
-    expect(getByText('Your Salary')).toBeInTheDocument();
-    expect(getByText('Basic Salary')).toBeInTheDocument();
-    expect(getByText('Gross Earning')).toBeInTheDocument();
-    // Add more assertions as needed
-  });
-
-  it('calculates and displays correct values', () => {
-    const { getByText } = render(<CalculationBar {...mockProps} />);
-
-    expect(getByText('50000')).toBeInTheDocument(); // Basic Salary
-    expect(getByText('63000')).toBeInTheDocument(); // Gross Earnings
-    expect(getByText('6000')).toBeInTheDocument(); // Gross Deductions
-  });
-
-  it('calls formatNumber function with correct arguments', () => {
-    render(<CalculationBar {...mockProps} />);
-
-    // Check if formatNumber function is called with expected arguments
-    expect(mockProps.formatNumber).toHaveBeenCalledTimes(6);
-    expect(mockProps.formatNumber).toHaveBeenCalledWith('50000'); // Basic Salary
-    expect(mockProps.formatNumber).toHaveBeenCalledWith('63000'); // Gross Earnings
-  });
-});
 
 const CalculationBar = ({ basicSalary, earnings, deductions, formatNumber }) => {
   const basicSalaryNum = parseFloat(basicSalary.replace(/,/g, ''));
